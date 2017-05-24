@@ -1,0 +1,63 @@
+{
+  "variables": {
+    "azure_subscription_id":  "{{env `TF_VAR_azure_subscription_id`}}",
+    "azure_client_id":        "{{env `TF_VAR_azure_client_id`}}",
+    "azure_client_secret":    "{{env `TF_VAR_azure_client_secret`}}",
+    "azure_object_id":        "{{env `azure_object_id`}}",
+    "azure_tenant_id":        "{{env `azure_tenant_id`}}",
+
+    "resource_group_name":    "{{env `TF_VAR_resourceGroupName`}}",
+    "location":               "{{env `TF_VAR_location`}}",
+    "storage_account":        "{{env `storageAccountName`}}",
+    "container_name":         "packer-images",
+    "capture_name_prefix":    "packer",
+
+    "vm_size":                "Standard_DS1_V2",
+    "image_publisher":        "MicrosoftWindowsServer",
+    "image_offer":            "WindowsServer",
+    "image_sku":              "2016-Datacenter",
+
+    "winrm_username":         "Administrator"
+  },
+  "builders": [
+    {
+      "type":                   "azure-arm",
+      "subscription_id":        "{{user `azure_subscription_id`}}",
+      "object_id":              "{{user `azure_object_id`}}",
+      "tenant_id":              "{{user `azure_tenant_id`}}",
+      "client_id":              "{{user `azure_client_id`}}",
+      "client_secret":          "{{user `azure_client_secret`}}",
+
+      "resource_group_name":    "{{user `resource_group_name`}}",
+      "storage_account":        "{{user `storage_account`}}",
+      "capture_container_name": "{{user `container_name`}}",
+      "capture_name_prefix":    "{{user `capture_name_prefix`}}",
+
+      "os_type":                "Windows",
+      "image_publisher":        "{{user `image_publisher`}}",
+      "image_offer":            "{{user `image_offer`}}",
+      "image_sku":              "{{user `image_sku`}}",
+
+      "winrm_use_ssl":          true,
+      "winrm_insecure":         true,
+      "communicator":           "winrm",
+      "winrm_username":         "{{user `winrm_username`}}",
+
+      "azure_tags": {
+        "dept": "engineering"
+      },
+
+      "location": "{{user `location`}}",
+      "vm_size": "{{user `vm_size`}}"
+    }
+  ],
+   "provisioners": [
+    {
+      "type": "powershell",
+      "inline": [
+        "if( Test-Path $Env:SystemRoot\\windows\\system32\\Sysprep\\unattend.xml ){ rm $Env:SystemRoot\\windows\\system32\\Sysprep\\unattend.xml -Force}",
+        "& $Env:SystemRoot\\System32\\Sysprep\\Sysprep.exe /oobe /generalize /shutdown /quiet"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+*.backup
+*.bak
+*.dll
+*.exe
+*.iml
+*.log
+*.received.*
+*.test
+*~
+.*.swp
+.DS_Store
+.terraform/
+.vagrant/
+terraform.tfplan
+terraform.tfstate
+
+# Cache objects
+packer_cache/
+
+# For built boxes
+*.box
+
+export.sh
+
+# Test exclusions
+!command/test-fixtures/**/*.tfstate
+!command/test-fixtures/**/.terraform/
