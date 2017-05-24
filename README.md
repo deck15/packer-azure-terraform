@@ -72,9 +72,17 @@ Validate packer template and apply using storage account name from Terraform tfs
 Packer will take variables assigned previously as environment variables.
 
 ```shell
-packer validate -var storage_account=$(terraform output storage_account_name) packer_windows.json
+# Inspect
+packer inspect packer_windows.json
 
-packer build -var storage_account=$(terraform output storage_account_name) packer_windows.json
+# Set storage account name as environment variable
+export storageAccountName=$(terraform output storage_account_name)
+
+# Validate
+packer validate packer_windows.json
+
+# Build
+packer build packer_windows.json
 ```
 
 Variables can be overwritten with `-var 'key=value'` arguments.
@@ -106,14 +114,17 @@ Variables for Packer can also be set from an external JSON file. The -var-file f
 It is a single JSON object where the keys are variables and the values are the variable values. Assuming this file is in variables.json, we can build our template using the following command:
 
 ```shell
-packer validate\
-  -var-file=variables.json\
-  -var storage_account=$(terraform output storage_account_name)\
+# Set storage account name as variable
+storageAccountName=$(terraform output storage_account_name)
+
+packer validate \
+  -var-file=variables.json \
+  -var storage_account=$storageAccountName \
   packer_windows.json
 
-packer build\
-  -var-file=variables.json\
-  -var storage_account=$(terraform output storage_account_name)\
+packer build \
+  -var-file=variables.json \
+  -var storage_account=$storageAccountName \
   packer_windows.json
 ```
 
