@@ -1,4 +1,5 @@
 # Creating Packer Images in Azure with Terraform
+The repository demonstrates simple usage of Terraform to configure an Azure infrastructure to store and use Packer images, and Packer templates to generate images to store in the Storage Account created in Azure.
 
 ## Getting Started
 You will need an Azure Service Principal Account. See [Authorizing Packer Builds in Azure](https://www.packer.io/docs/builders/azure-setup.html).
